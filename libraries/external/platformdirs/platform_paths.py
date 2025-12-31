@@ -1,35 +1,42 @@
 """This module contains filesystem path(s) used by this application."""
 
 from pathlib import Path
-from platformdirs import user_data_path
+
+from platformdirs import user_config_path, user_data_path
+
+APP_NAME = 'name'
+APP_AUTHOR = 'author'
 
 
-APP_NAME = 'APP'
-APP_AUTHOR = 'Author Name'
-FILE_NAME = 'example.json'
-
-
-def get_data_path(file_name: str) -> Path:
-    """Returns the absolute Path object for given data file.
+def get_data_path() -> Path:
+    """Returns the absolute Path object for data directory.
 
     If the directory does not exist, it will be created.
     """
-    data_path = user_data_path(
+    return user_data_path(
         appname = APP_NAME,
         appauthor = APP_AUTHOR,
         roaming = False,
         ensure_exists = True
     )
-    return data_path / file_name
 
 
-def ensure_file_exists(file_path: Path) -> None:
-    """Checks if the data file exists. If not, it will be created."""
-    if not file_path.exists():
-        print(f'Creating new task file at: {file_path}')
-        file_path.write_text('{}', encoding='UTF-8')
+def get_config_path() -> Path:
+    """Returns the absolute Path object for config directory.
+
+    If the directory does not exist, it will be created.
+    """
+    return user_config_path(
+        appname = APP_NAME,
+        appauthor = APP_AUTHOR,
+        roaming = False,
+        ensure_exists = True
+    )
 
 
-DATA_PATH = get_data_path(FILE_NAME)
-ensure_file_exists(DATA_PATH)
+DATA_DIR = get_data_path()
+CONFIG_DIR = get_config_path()
+
+DATA_FILE: Path = DATA_DIR / 'example.json'
+DOTENV_PATH: Path = CONFIG_DIR / '.env'
 
